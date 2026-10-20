@@ -6,24 +6,21 @@
   <title>Deeeep.io Clone</title>
   <style>
     :root {
-      --bg-1: #061b2d;
-      --bg-2: #091f33;
-      --panel: rgba(10, 18, 28, 0.62);
+      --bg-1: #071b29;
+      --bg-2: #0b2334;
+      --panel: rgba(11, 19, 28, 0.64);
       --panel-border: rgba(255,255,255,0.12);
       --text: #edf7ff;
-      --muted: #c4d9f0;
-      --green: #5fe195;
-      --green-2: #43d889;
-      --blue: #72c9ff;
-      --gold: #ffd167;
-      --danger: #ff6767;
-      --danger-soft: rgba(255, 103, 103, 0.22);
-      --shadow: rgba(0, 0, 0, 0.32);
+      --muted: #cfe0ef;
+      --green: #5fe3a3;
+      --blue: #73c9ff;
+      --gold: #ffd87a;
+      --danger: #ff5d5d;
+      --danger-soft: rgba(255, 93, 93, 0.24);
+      --shadow: rgba(0,0,0,0.35);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -39,8 +36,8 @@
       display: block;
       width: 100vw;
       height: 100vh;
+      background: linear-gradient(180deg, #8bd0ff 0%, #74c1ff 30%, #5db0dc 45%, #3c6d87 48%, #1e3c4e 100%);
       cursor: crosshair;
-      background: linear-gradient(180deg, #79c8ff 0%, #64bff6 55%, #0e2536 55%, #051821 100%);
     }
 
     #leaderboard {
@@ -49,10 +46,10 @@
       right: 16px;
       width: 210px;
       padding: 10px 12px 8px;
-      background: var(--panel);
+      background: rgba(18, 25, 36, 0.78);
       border: 1px solid var(--panel-border);
       border-radius: 14px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.26);
+      box-shadow: 0 14px 24px rgba(0,0,0,0.25);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 20;
@@ -64,7 +61,7 @@
       align-items: center;
       color: var(--muted);
       font-size: 11px;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 6px;
       padding: 0 2px;
@@ -80,41 +77,32 @@
       font-size: 13px;
     }
 
-    .leaderboard-rank {
-      opacity: 0.75;
-    }
-
+    .leaderboard-rank { opacity: 0.77; }
     .leaderboard-name {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-
-    .leaderboard-xp {
-      color: var(--blue);
-      font-weight: 700;
-    }
+    .leaderboard-xp { color: var(--blue); font-weight: 700; }
 
     #gameOverOverlay {
       position: fixed;
       inset: 0;
       display: grid;
       place-items: center;
-      background: rgba(0,0,0,0.36);
+      background: rgba(0,0,0,0.38);
       z-index: 30;
     }
 
-    #gameOverOverlay.hidden {
-      display: none;
-    }
+    #gameOverOverlay.hidden { display: none; }
 
     .game-over-card {
-      min-width: 285px;
+      min-width: 290px;
       padding: 24px 28px;
       border-radius: 18px;
-      background: rgba(11, 19, 28, 0.82);
+      background: rgba(10, 18, 28, 0.82);
       border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 18px 32px rgba(0, 0, 0, 0.38);
+      box-shadow: 0 18px 32px rgba(0,0,0,0.38);
       text-align: center;
     }
 
@@ -126,8 +114,8 @@
 
     .game-over-card p {
       margin: 0 0 18px;
-      font-size: 14px;
       color: var(--muted);
+      font-size: 14px;
     }
 
     button {
@@ -137,29 +125,14 @@
       padding: 11px 20px;
       font: inherit;
       font-weight: 700;
-      color: #0b1f30;
-      background: linear-gradient(135deg, #9de7ff, #6ae4a8);
+      color: #081b2a;
+      background: linear-gradient(135deg, #a5e5ff, #66dfad);
       cursor: pointer;
-      box-shadow: 0 12px 20px rgba(73, 208, 142, 0.25);
+      box-shadow: 0 12px 22px rgba(71, 204, 135, 0.26);
       transition: transform 0.15s ease;
     }
 
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .tooltip {
-      position: absolute;
-      pointer-events: none;
-      padding: 6px 8px;
-      border-radius: 8px;
-      background: rgba(8, 12, 16, 0.76);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text);
-      font-size: 11px;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-    }
+    button:hover { transform: translateY(-1px); }
   </style>
 </head>
 <body>
@@ -191,42 +164,22 @@
       const EVOLUTION_THRESHOLDS = { 1: 100, 2: 300, 3: 600 };
 
       const TIER_CONFIG = {
-        1: { name: 'Fish', label: 'Red Fish', color: '#e95d4d', skin: 'fish', radius: 18, speed: 170, maxHealth: 100, damage: 14 },
-        2: { name: 'Crab', label: 'Brown Crab', color: '#996246', skin: 'crab', radius: 24, speed: 182, maxHealth: 136, damage: 18 },
-        3: { name: 'Squid', label: 'Purple Squid', color: '#8d6ff0', skin: 'squid', radius: 30, speed: 190, maxHealth: 172, damage: 22 },
-        4: { name: 'Shark', label: 'Apex Shark', color: '#a5afb9', skin: 'shark', radius: 38, speed: 220, maxHealth: 248, damage: 32 }
+        1: { name: 'Fish', label: 'Red Fish', color: '#e95c4d', skin: 'fish', radius: 18, speed: 170, maxHealth: 100, damage: 14 },
+        2: { name: 'Crab', label: 'Brown Crab', color: '#9d683d', skin: 'crab', radius: 24, speed: 182, maxHealth: 136, damage: 18 },
+        3: { name: 'Squid', label: 'Purple Squid', color: '#8a63ec', skin: 'squid', radius: 30, speed: 192, maxHealth: 172, damage: 22 },
+        4: { name: 'Shark', label: 'Apex Shark', color: '#a9b6c1', skin: 'shark', radius: 38, speed: 220, maxHealth: 248, damage: 32 }
       };
 
-      const SHAPE_SKINS = {
-        fish: {
-          variants: ['classic', 'stripe', 'sunburst', 'camo'],
-          palette: ['#ea5d4d', '#ff8b7a', '#d84d4d', '#ffb694']
-        },
-        crab: {
-          variants: ['reef', 'stone', 'amber', 'night'],
-          palette: ['#8d5a3c', '#c88b62', '#966142', '#7d4a35']
-        },
-        squid: {
-          variants: ['violet', 'ink', 'glow', 'neon'],
-          palette: ['#8e6ef5', '#7a4fe8', '#b38dff', '#563ec3']
-        },
-        shark: {
-          variants: ['steel', 'shadow', 'ice', 'storm'],
-          palette: ['#a7b8c7', '#c2cddb', '#8aa5b3', '#e9eef5']
-        }
-      };
-
-      const state = {
-        lastTime: performance.now(),
+      const world = {
         foods: [],
         particles: [],
         bots: [],
         player: null,
-        mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2, worldX: WORLD_WIDTH / 2, worldY: WORLD_HEIGHT / 2 },
+        mouse: { x: 0, y: 0, worldX: WORLD_WIDTH / 2, worldY: WORLD_HEIGHT / 2 },
         camera: { x: WORLD_WIDTH / 2, y: WORLD_HEIGHT / 2 },
         pressureWarning: 0,
-        gameOver: false,
-        debug: false
+        lastTime: performance.now(),
+        gameOver: false
       };
 
       function clamp(value, min, max) {
@@ -235,6 +188,14 @@
 
       function rand(min, max) {
         return min + Math.random() * (max - min);
+      }
+
+      function worldToScreenX(worldX) {
+        return worldX - world.camera.x + window.innerWidth / 2;
+      }
+
+      function worldToScreenY(worldY) {
+        return worldY - world.camera.y + window.innerHeight / 2;
       }
 
       function normalizeAngle(angle) {
@@ -248,73 +209,28 @@
         return current + clamp(diff, -amount, amount);
       }
 
-      function worldToScreenX(worldX) {
-        return worldX - state.camera.x + window.innerWidth / 2;
-      }
-
-      function worldToScreenY(worldY) {
-        return worldY - state.camera.y + window.innerHeight / 2;
-      }
-
       function spawnFood(x, y) {
-        state.foods.push({
+        world.foods.push({
           x,
           y,
           radius: rand(3.2, 6.4),
-          color: `hsl(${Math.random() * 360}, 78%, 64%)`,
+          color: `hsl(${Math.random() * 360}, 75%, 64%)`,
           active: true
         });
       }
 
       function replenishFood() {
-        while (state.foods.length < FOOD_TARGET) {
+        while (world.foods.length < FOOD_TARGET) {
           spawnFood(rand(25, WORLD_WIDTH - 25), rand(25, WORLD_HEIGHT - 25));
         }
 
-        state.foods = state.foods.filter((food) => food && food.active);
-        while (state.foods.length < FOOD_TARGET) {
+        world.foods = world.foods.filter((food) => food && food.active);
+        while (world.foods.length < FOOD_TARGET) {
           spawnFood(rand(25, WORLD_WIDTH - 25), rand(25, WORLD_HEIGHT - 25));
         }
       }
 
-      function createEntity(kind, tier, x, y, name) {
-        const entity = {
-          kind,
-          type: kind === 'player' ? 'player' : 'bot',
-          name: name || 'Entity',
-          x,
-          y,
-          vx: 0,
-          vy: 0,
-          angle: rand(-Math.PI, Math.PI),
-          tier,
-          xp: 0,
-          health: 100,
-          maxHealth: 100,
-          radius: TIER_CONFIG[tier].radius,
-          color: TIER_CONFIG[tier].color,
-          skin: TIER_CONFIG[tier].skin,
-          variant: 'classic',
-          speed: TIER_CONFIG[tier].speed,
-          boost: 100,
-          boostMax: 100,
-          dashTimer: 0,
-          dashCooldown: 0,
-          hitCooldown: 0,
-          pressureTimer: 0,
-          alive: true,
-          dead: false,
-          respawnTimer: 0,
-          wanderTarget: { x: rand(80, WORLD_WIDTH - 80), y: rand(80, WORLD_HEIGHT - 80) }
-        };
-
-        applyTierEntity(entity, true);
-        entity.health = entity.maxHealth;
-        entity.boost = entity.boostMax;
-        return entity;
-      }
-
-      function applyTierEntity(entity, fullReset = false) {
+      function applyTierStats(entity, fullReset = false) {
         const cfg = TIER_CONFIG[entity.tier];
         if (!cfg) return;
 
@@ -332,9 +248,41 @@
           entity.health = clamp(entity.health || cfg.maxHealth, 0, cfg.maxHealth);
           entity.boost = clamp(entity.boost || 100, 0, 100);
         }
+      }
 
-        const variants = SHAPE_SKINS[entity.skin]?.variants || ['classic'];
-        entity.variant = variants[Math.floor(Math.random() * variants.length)];
+      function createEntity(kind, tier, x, y, name) {
+        const entity = {
+          kind,
+          type: kind === 'player' ? 'player' : 'bot',
+          name: name || 'Entity',
+          x,
+          y,
+          vx: 0,
+          vy: 0,
+          angle: rand(-Math.PI, Math.PI),
+          tier,
+          xp: 0,
+          health: 100,
+          maxHealth: 100,
+          radius: 18,
+          color: '#fff',
+          skin: 'fish',
+          variant: 'classic',
+          speed: 170,
+          boost: 100,
+          boostMax: 100,
+          dashTimer: 0,
+          dashCooldown: 0,
+          hitCooldown: 0,
+          pressureTimer: 0,
+          alive: true,
+          dead: false,
+          respawnTimer: 0,
+          wanderTarget: { x: rand(80, WORLD_WIDTH - 80), y: rand(80, WORLD_HEIGHT - 80) }
+        };
+
+        applyTierStats(entity, true);
+        return entity;
       }
 
       function triggerDash(entity) {
@@ -345,41 +293,34 @@
         entity.dashTimer = 0.2;
         entity.boost = clamp(entity.boost - 35, 0, 100);
 
-        const force = entity.tier === 4 ? 740 : 560;
+        const force = entity.tier === 4 ? 760 : 580;
         entity.vx += Math.cos(entity.angle) * force;
         entity.vy += Math.sin(entity.angle) * force;
       }
 
       function gainXP(entity, amount) {
         if (!entity || !entity.alive) return;
-
         entity.xp += amount;
         entity.boost = clamp(entity.boost + 8, 0, 100);
 
-        let evolved = false;
         while (entity.tier < 4 && entity.xp >= (EVOLUTION_THRESHOLDS[entity.tier] || Infinity)) {
           entity.tier += 1;
-          evolved = true;
-          applyTierEntity(entity, false);
+          applyTierStats(entity, false);
           entity.health = entity.maxHealth;
-        }
-
-        if (evolved && entity.kind === 'player') {
-          // player successfully evolved; no extra side effects needed
         }
       }
 
       function spawnXPParticles(x, y, totalXP) {
         const count = clamp(Math.round(totalXP / 10), 10, 30);
         for (let i = 0; i < count; i += 1) {
-          state.particles.push({
+          world.particles.push({
             x,
             y,
             vx: rand(-120, 120),
             vy: rand(-120, 120),
-            radius: rand(2.6, 5.4),
-            life: rand(0.7, 1.4),
-            color: i % 2 === 0 ? '#f5da66' : '#9ee1ff',
+            radius: rand(2.8, 5.2),
+            life: rand(0.7, 1.3),
+            color: i % 2 === 0 ? '#f5db70' : '#9fe4ff',
             active: true
           });
         }
@@ -387,33 +328,30 @@
 
       function killEntity(entity) {
         if (!entity || !entity.alive) return;
-
         entity.alive = false;
         entity.health = 0;
 
         if (entity.type === 'player') {
           overlayEl.classList.remove('hidden');
-          state.gameOver = true;
+          world.gameOver = true;
           return;
         }
 
         if (entity.xp > 0) {
           spawnXPParticles(entity.x, entity.y, Math.floor(entity.xp * 0.5));
         }
-
         entity.respawnTimer = rand(1.8, 3.2);
       }
 
       function respawnPlayer() {
-        state.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
-        state.player.angle = -Math.PI / 2;
-        state.gameOver = false;
+        world.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
+        world.player.angle = -Math.PI / 2;
+        world.gameOver = false;
         overlayEl.classList.add('hidden');
       }
 
       function respawnBot(bot) {
         if (!bot) return;
-
         bot.alive = true;
         bot.dead = false;
         bot.x = rand(150, WORLD_WIDTH - 150);
@@ -423,8 +361,8 @@
         bot.angle = rand(-Math.PI, Math.PI);
         bot.tier = 1 + Math.floor(Math.random() * 3);
         bot.xp = 0;
-        applyTierEntity(bot, true);
-        bot.wanderTarget = { x: rand(90, WORLD_WIDTH - 90), y: rand(90, WORLD_HEIGHT - 90) };
+        applyTierStats(bot, true);
+        bot.wanderTarget = { x: rand(80, WORLD_WIDTH - 80), y: rand(80, WORLD_HEIGHT - 80) };
         bot.pressureTimer = 0;
         bot.respawnTimer = 0;
       }
@@ -433,14 +371,14 @@
         let best = null;
         let bestDistSq = Infinity;
 
-        for (const food of state.foods) {
+        for (const food of world.foods) {
           if (!food || !food.active) continue;
           const dx = food.x - entity.x;
           const dy = food.y - entity.y;
           const distSq = dx * dx + dy * dy;
           if (distSq < bestDistSq) {
-            bestDistSq = distSq;
             best = food;
+            bestDistSq = distSq;
           }
         }
 
@@ -448,28 +386,22 @@
       }
 
       function updatePlayer(dt) {
-        const player = state.player;
-        if (!player || !player.alive || state.gameOver) return;
+        const player = world.player;
+        if (!player || !player.alive || world.gameOver) return;
 
         player.hitCooldown = Math.max(0, player.hitCooldown - dt);
         player.dashCooldown = Math.max(0, player.dashCooldown - dt);
         player.dashTimer = Math.max(0, player.dashTimer - dt);
         player.boost = clamp(player.boost + dt * 12, 0, 100);
 
-        const desiredAngle = Math.atan2(state.mouse.worldY - player.y, state.mouse.worldX - player.x);
+        const desiredAngle = Math.atan2(world.mouse.worldY - player.y, world.mouse.worldX - player.x);
         const turnSpeed = player.tier === 4 ? 3.1 : 2.5;
         player.angle = lerpAngle(player.angle, desiredAngle, turnSpeed * dt);
 
         let moveForce = player.speed;
-        if (player.tier === 2 && Math.abs(player.y - BIOME_SPLIT) < 120) {
-          moveForce *= 1.35;
-        }
-        if (player.tier === 4) {
-          moveForce *= 1.25;
-        }
-        if (player.dashTimer > 0) {
-          moveForce *= 1.3;
-        }
+        if (player.tier === 2 && Math.abs(player.y - BIOME_SPLIT) < 120) moveForce *= 1.35;
+        if (player.tier === 4) moveForce *= 1.25;
+        if (player.dashTimer > 0) moveForce *= 1.25;
 
         player.vx += Math.cos(player.angle) * moveForce * dt;
         player.vy += Math.sin(player.angle) * moveForce * dt;
@@ -499,14 +431,12 @@
           player.pressureTimer = 0;
         }
 
-        if (player.health <= 0) {
-          killEntity(player);
-        }
+        if (player.health <= 0) killEntity(player);
       }
 
       function updateBots(dt) {
-        for (let i = 0; i < state.bots.length; i += 1) {
-          const bot = state.bots[i];
+        for (let i = 0; i < world.bots.length; i += 1) {
+          const bot = world.bots[i];
           if (!bot) continue;
 
           bot.hitCooldown = Math.max(0, bot.hitCooldown - dt);
@@ -516,9 +446,7 @@
 
           if (!bot.alive) {
             bot.respawnTimer -= dt;
-            if (bot.respawnTimer <= 0) {
-              respawnBot(bot);
-            }
+            if (bot.respawnTimer <= 0) respawnBot(bot);
             continue;
           }
 
@@ -535,12 +463,8 @@
           bot.angle = lerpAngle(bot.angle, desiredAngle, turnRate * dt);
 
           let moveForce = bot.speed;
-          if (bot.tier === 2 && Math.abs(bot.y - BIOME_SPLIT) < 120) {
-            moveForce *= 1.35;
-          }
-          if (bot.tier === 4) {
-            moveForce *= 1.25;
-          }
+          if (bot.tier === 2 && Math.abs(bot.y - BIOME_SPLIT) < 120) moveForce *= 1.35;
+          if (bot.tier === 4) moveForce *= 1.25;
 
           if (nearestFood && Math.hypot(nearestFood.x - bot.x, nearestFood.y - bot.y) < 120 && bot.boost > 25 && Math.random() < 0.04) {
             triggerDash(bot);
@@ -567,43 +491,39 @@
 
           if (bot.tier !== 4 && bot.y >= BIOME_SPLIT) {
             bot.pressureTimer += dt;
-            if (bot.pressureTimer > 5) {
-              bot.health -= 10 * dt;
-            }
+            if (bot.pressureTimer > 5) bot.health -= 10 * dt;
           } else {
             bot.pressureTimer = 0;
           }
 
-          if (bot.health <= 0) {
-            killEntity(bot);
-          }
+          if (bot.health <= 0) killEntity(bot);
         }
       }
 
       function handleFoodCollisions() {
-        const player = state.player;
+        const player = world.player;
 
         if (player && player.alive) {
-          for (let i = state.foods.length - 1; i >= 0; i -= 1) {
-            const food = state.foods[i];
+          for (let i = world.foods.length - 1; i >= 0; i -= 1) {
+            const food = world.foods[i];
             if (!food || !food.active) continue;
             if (Math.hypot(food.x - player.x, food.y - player.y) < food.radius + player.radius + 2) {
               gainXP(player, 10);
               food.active = false;
-              state.foods.splice(i, 1);
+              world.foods.splice(i, 1);
             }
           }
         }
 
-        for (const bot of state.bots) {
+        for (const bot of world.bots) {
           if (!bot || !bot.alive) continue;
-          for (let i = state.foods.length - 1; i >= 0; i -= 1) {
-            const food = state.foods[i];
+          for (let i = world.foods.length - 1; i >= 0; i -= 1) {
+            const food = world.foods[i];
             if (!food || !food.active) continue;
             if (Math.hypot(food.x - bot.x, food.y - bot.y) < food.radius + bot.radius + 2) {
               gainXP(bot, 10);
               food.active = false;
-              state.foods.splice(i, 1);
+              world.foods.splice(i, 1);
               break;
             }
           }
@@ -614,8 +534,8 @@
 
       function resolveCombat(a, b) {
         if (!a || !b || !a.alive || !b.alive) return;
-
         const sameTier = a.tier === b.tier;
+
         if (sameTier && a.tier !== 4) return;
 
         if (sameTier && a.tier === 4) {
@@ -638,36 +558,32 @@
       }
 
       function handleCombat() {
-        const player = state.player;
+        const player = world.player;
         if (player && player.alive) {
-          for (const bot of state.bots) {
+          for (const bot of world.bots) {
             if (!bot || !bot.alive) continue;
             const dist = Math.hypot(bot.x - player.x, bot.y - player.y);
-            if (dist < player.radius + bot.radius + 5) {
-              resolveCombat(player, bot);
-            }
+            if (dist < player.radius + bot.radius + 5) resolveCombat(player, bot);
           }
         }
 
-        for (let i = 0; i < state.bots.length; i += 1) {
-          const a = state.bots[i];
+        for (let i = 0; i < world.bots.length; i += 1) {
+          const a = world.bots[i];
           if (!a || !a.alive) continue;
-          for (let j = i + 1; j < state.bots.length; j += 1) {
-            const b = state.bots[j];
+          for (let j = i + 1; j < world.bots.length; j += 1) {
+            const b = world.bots[j];
             if (!b || !b.alive) continue;
             const dist = Math.hypot(b.x - a.x, b.y - a.y);
-            if (dist < a.radius + b.radius + 5) {
-              resolveCombat(a, b);
-            }
+            if (dist < a.radius + b.radius + 5) resolveCombat(a, b);
           }
         }
       }
 
       function updateParticles(dt) {
-        for (let i = state.particles.length - 1; i >= 0; i -= 1) {
-          const particle = state.particles[i];
+        for (let i = world.particles.length - 1; i >= 0; i -= 1) {
+          const particle = world.particles[i];
           if (!particle || !particle.active) {
-            state.particles.splice(i, 1);
+            world.particles.splice(i, 1);
             continue;
           }
 
@@ -676,50 +592,44 @@
           particle.vy += 18 * dt;
           particle.life -= dt;
 
-          if (particle.life <= 0) {
-            state.particles.splice(i, 1);
-          }
+          if (particle.life <= 0) world.particles.splice(i, 1);
         }
       }
 
       function updatePressureWarning(dt) {
-        let warningActive = false;
+        let active = false;
 
-        if (state.player && state.player.alive && state.player.tier !== 4 && state.player.y >= BIOME_SPLIT && state.player.pressureTimer > 5) {
-          warningActive = true;
+        if (world.player && world.player.alive && world.player.tier !== 4 && world.player.y >= BIOME_SPLIT && world.player.pressureTimer > 5) {
+          active = true;
         }
 
-        for (const bot of state.bots) {
+        for (const bot of world.bots) {
           if (!bot || !bot.alive) continue;
           if (bot.tier !== 4 && bot.y >= BIOME_SPLIT && bot.pressureTimer > 5) {
-            warningActive = true;
+            active = true;
             break;
           }
         }
 
-        if (warningActive) {
-          state.pressureWarning = clamp(state.pressureWarning + dt * 3.5, 0, 1);
+        if (active) {
+          world.pressureWarning = clamp(world.pressureWarning + dt * 3.3, 0, 1);
         } else {
-          state.pressureWarning = clamp(state.pressureWarning - dt * 4.4, 0, 1);
+          world.pressureWarning = clamp(world.pressureWarning - dt * 4.2, 0, 1);
         }
       }
 
       function updateCamera() {
-        if (!state.player || !state.player.alive) return;
+        if (!world.player || !world.player.alive) return;
 
         const halfW = window.innerWidth / 2;
         const halfH = window.innerHeight / 2;
-        const minX = halfW;
-        const maxX = WORLD_WIDTH - halfW;
-        const minY = halfH;
-        const maxY = WORLD_HEIGHT - halfH;
 
-        state.camera.x = clamp(state.player.x, minX, maxX);
-        state.camera.y = clamp(state.player.y, minY, maxY);
+        world.camera.x = clamp(world.player.x, halfW, WORLD_WIDTH - halfW);
+        world.camera.y = clamp(world.player.y, halfH, WORLD_HEIGHT - halfH);
       }
 
       function updateLeaderboard() {
-        const entries = [state.player, ...state.bots]
+        const entries = [world.player, ...world.bots]
           .filter((entity) => entity && entity.alive)
           .sort((a, b) => (b.xp || 0) - (a.xp || 0))
           .slice(0, 5);
@@ -746,28 +656,44 @@
       }
 
       function drawBackground() {
-        const topScreenY = worldToScreenY(0);
-        const splitScreenY = worldToScreenY(BIOME_SPLIT);
+        const oceanTop = worldToScreenY(0);
+        const splitY = worldToScreenY(BIOME_SPLIT);
+        const oceanHeight = splitY - oceanTop;
+        const deepHeight = worldToScreenY(WORLD_HEIGHT) - splitY;
 
-        const oceanHeight = splitScreenY - topScreenY;
-        const deepHeight = worldToScreenY(WORLD_HEIGHT) - splitScreenY;
+        const topGrad = ctx.createLinearGradient(0, oceanTop, 0, splitY);
+        topGrad.addColorStop(0, '#8ad7ff');
+        topGrad.addColorStop(0.24, '#75c6f1');
+        topGrad.addColorStop(0.6, '#5aa7d8');
+        topGrad.addColorStop(1, '#4a7ca5');
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(worldToScreenX(0), oceanTop, WORLD_WIDTH, oceanHeight);
 
-        ctx.fillStyle = '#7cc5ff';
-        ctx.fillRect(worldToScreenX(0), worldToScreenY(0), WORLD_WIDTH, oceanHeight);
+        const deepGrad = ctx.createLinearGradient(0, splitY, 0, splitY + deepHeight);
+        deepGrad.addColorStop(0, '#712c76');
+        deepGrad.addColorStop(0.45, '#1f3d6f');
+        deepGrad.addColorStop(1, '#071a29');
+        ctx.fillStyle = deepGrad;
+        ctx.fillRect(worldToScreenX(0), splitY, WORLD_WIDTH, deepHeight);
 
-        ctx.fillStyle = '#071d2d';
-        ctx.fillRect(worldToScreenX(0), splitScreenY, WORLD_WIDTH, deepHeight);
-
-        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.18)';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(worldToScreenX(0), splitScreenY);
-        ctx.lineTo(worldToScreenX(WORLD_WIDTH), splitScreenY);
+        ctx.moveTo(worldToScreenX(0), splitY);
+        ctx.lineTo(worldToScreenX(WORLD_WIDTH), splitY);
         ctx.stroke();
+
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        for (let i = 0; i < 30; i += 1) {
+          const x = rand(0, canvas.width);
+          const y = rand(0, splitY);
+          const s = rand(1, 3);
+          ctx.fillRect(x, y, s, s);
+        }
       }
 
       function drawFood() {
-        for (const food of state.foods) {
+        for (const food of world.foods) {
           if (!food || !food.active) continue;
           const x = worldToScreenX(food.x);
           const y = worldToScreenY(food.y);
@@ -780,7 +706,7 @@
       }
 
       function drawParticles() {
-        for (const particle of state.particles) {
+        for (const particle of world.particles) {
           if (!particle || !particle.active) continue;
           const x = worldToScreenX(particle.x);
           const y = worldToScreenY(particle.y);
@@ -795,7 +721,7 @@
         }
       }
 
-      function drawBar(x, y, w, h, ratio, color, bg = 'rgba(0,0,0,0.42)') {
+      function drawBar(x, y, w, h, ratio, color, bg = 'rgba(0,0,0,0.4)') {
         ctx.fillStyle = bg;
         ctx.fillRect(x - w / 2, y - h / 2, w, h);
 
@@ -804,58 +730,57 @@
         ctx.fillRect(x - w / 2, y - h / 2, fillW, h);
       }
 
-      function drawFishBody(entity) {
-        const x = worldToScreenX(entity.x);
-        const y = worldToScreenY(entity.y);
+      function drawFish(entity) {
+        const sx = worldToScreenX(entity.x);
+        const sy = worldToScreenY(entity.y);
 
         ctx.save();
-        ctx.translate(x, y);
+        ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
 
         const r = entity.radius;
-        const palette = SHAPE_SKINS[entity.skin]?.palette || ['#e95d4d'];
-        const flatColor = entity.variant === 'stripe' ? palette[1] : (entity.variant === 'sunburst' ? palette[3] : palette[0]);
+        const variant = entity.variant || 'classic';
 
         ctx.fillStyle = entity.color;
         ctx.beginPath();
-        ctx.ellipse(0, 0, r * 1.2, r * 0.8, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, r * 1.22, r * 0.8, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        if (entity.variant === 'stripe') {
-          ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        if (variant === 'stripe') {
+          ctx.strokeStyle = 'rgba(255,255,255,0.4)';
           ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.moveTo(-r * 0.9, 0);
+          ctx.moveTo(-r * 0.8, 0);
           ctx.lineTo(r * 0.8, 0);
           ctx.stroke();
         }
 
-        if (entity.variant === 'sunburst') {
-          ctx.fillStyle = '#ffe6af';
+        if (variant === 'sunburst') {
+          ctx.fillStyle = '#ffe2a9';
           ctx.beginPath();
-          ctx.moveTo(-r * 0.35, 0);
-          ctx.lineTo(r * 0.2, -r * 0.5);
-          ctx.lineTo(r * 0.35, 0);
-          ctx.lineTo(r * 0.2, r * 0.5);
+          ctx.moveTo(-r * 0.25, 0);
+          ctx.lineTo(r * 0.15, -r * 0.55);
+          ctx.lineTo(r * 0.38, 0);
+          ctx.lineTo(r * 0.15, r * 0.55);
           ctx.closePath();
           ctx.fill();
         }
 
-        ctx.fillStyle = '#f4d9d5';
+        ctx.fillStyle = '#f7dfd7';
         ctx.beginPath();
-        ctx.arc(r * 0.15, -r * 0.1, r * 0.18, 0, Math.PI * 2);
+        ctx.arc(r * 0.18, -r * 0.08, r * 0.18, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#111827';
+        ctx.fillStyle = '#101827';
         ctx.beginPath();
-        ctx.arc(r * 0.2, -r * 0.1, r * 0.06, 0, Math.PI * 2);
+        ctx.arc(r * 0.22, -r * 0.08, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#dfe9ff';
+        ctx.fillStyle = '#e7f2ff';
         ctx.beginPath();
-        ctx.moveTo(r * 1.2, 0);
-        ctx.lineTo(r * 1.8, -r * 0.45);
-        ctx.lineTo(r * 1.8, r * 0.45);
+        ctx.moveTo(r * 1.15, 0);
+        ctx.lineTo(r * 1.85, -r * 0.45);
+        ctx.lineTo(r * 1.85, r * 0.45);
         ctx.closePath();
         ctx.fill();
 
@@ -863,14 +788,14 @@
       }
 
       function drawCrab(entity) {
-        const x = worldToScreenX(entity.x);
-        const y = worldToScreenY(entity.y);
+        const sx = worldToScreenX(entity.x);
+        const sy = worldToScreenY(entity.y);
 
         ctx.save();
-        ctx.translate(x, y);
+        ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
-
         const r = entity.radius;
+
         ctx.fillStyle = entity.color;
         ctx.beginPath();
         ctx.arc(0, 0, r * 0.9, 0, Math.PI * 2);
@@ -879,17 +804,17 @@
         ctx.fillStyle = 'rgba(255,255,255,0.16)';
         ctx.fillRect(-r * 0.5, -r * 0.2, r * 1.05, r * 0.4);
 
-        ctx.fillStyle = '#5f382a';
+        ctx.fillStyle = '#5d392b';
         for (let i = -1; i <= 1; i += 1) {
           ctx.beginPath();
-          ctx.moveTo(-r * 0.75, i * 10);
-          ctx.lineTo(-r * 1.25, i * 14 + 7);
-          ctx.lineTo(-r * 1.25, i * 14 - 7);
+          ctx.moveTo(-r * 0.8, i * 10);
+          ctx.lineTo(-r * 1.35, i * 14 + 8);
+          ctx.lineTo(-r * 1.35, i * 14 - 8);
           ctx.closePath();
           ctx.fill();
         }
 
-        ctx.strokeStyle = '#5c2f22';
+        ctx.strokeStyle = '#5b2f21';
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(-r * 0.05, -r * 0.9);
@@ -898,25 +823,24 @@
         ctx.lineTo(r * 0.7, r * 1.25);
         ctx.stroke();
 
-        ctx.fillStyle = '#f1d9bb';
+        ctx.fillStyle = '#f0d8b8';
         ctx.beginPath();
-        ctx.arc(r * 0.25, -r * 0.12, r * 0.16, 0, Math.PI * 2);
+        ctx.arc(r * 0.25, -r * 0.08, r * 0.16, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#17171a';
+        ctx.fillStyle = '#17181d';
         ctx.beginPath();
-        ctx.arc(r * 0.3, -r * 0.12, r * 0.06, 0, Math.PI * 2);
+        ctx.arc(r * 0.3, -r * 0.08, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.restore();
       }
 
       function drawSquid(entity) {
-        const x = worldToScreenX(entity.x);
-        const y = worldToScreenY(entity.y);
+        const sx = worldToScreenX(entity.x);
+        const sy = worldToScreenY(entity.y);
 
         ctx.save();
-        ctx.translate(x, y);
+        ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
 
         const r = entity.radius;
@@ -925,24 +849,17 @@
         ctx.ellipse(0, 0, r * 1.1, r * 0.8, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        if (entity.variant === 'glow' || entity.variant === 'neon') {
-          ctx.fillStyle = 'rgba(255,255,255,0.18)';
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 0.7, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.fillStyle = '#dfe1ff';
+        ctx.fillStyle = '#dfe2ff';
         ctx.beginPath();
-        ctx.arc(r * 0.18, -r * 0.08, r * 0.17, 0, Math.PI * 2);
+        ctx.arc(r * 0.18, -r * 0.06, r * 0.17, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#111827';
+        ctx.fillStyle = '#161b2a';
         ctx.beginPath();
-        ctx.arc(r * 0.24, -r * 0.08, r * 0.06, 0, Math.PI * 2);
+        ctx.arc(r * 0.23, -r * 0.06, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.strokeStyle = '#5b40d5';
+        ctx.strokeStyle = '#5c43d8';
         ctx.lineWidth = 2;
         for (let i = -2; i <= 2; i += 1) {
           ctx.beginPath();
@@ -955,41 +872,41 @@
       }
 
       function drawShark(entity) {
-        const x = worldToScreenX(entity.x);
-        const y = worldToScreenY(entity.y);
+        const sx = worldToScreenX(entity.x);
+        const sy = worldToScreenY(entity.y);
 
         ctx.save();
-        ctx.translate(x, y);
+        ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
 
         const r = entity.radius;
         ctx.fillStyle = entity.color;
         ctx.beginPath();
-        ctx.moveTo(-r * 1.28, 0);
-        ctx.lineTo(-r * 0.35, -r * 0.82);
+        ctx.moveTo(-r * 1.3, 0);
+        ctx.lineTo(-r * 0.35, -r * 0.8);
         ctx.lineTo(r * 0.82, -r * 0.46);
         ctx.lineTo(r * 1.18, 0);
         ctx.lineTo(r * 0.82, r * 0.46);
-        ctx.lineTo(-r * 0.35, r * 0.82);
+        ctx.lineTo(-r * 0.35, r * 0.8);
         ctx.closePath();
         ctx.fill();
 
-        ctx.fillStyle = '#7e8ea0';
+        ctx.fillStyle = '#7d8ea0';
         ctx.beginPath();
-        ctx.moveTo(r * 0.82, 0);
+        ctx.moveTo(r * 0.85, 0);
         ctx.lineTo(r * 1.8, -r * 0.33);
         ctx.lineTo(r * 1.8, r * 0.33);
         ctx.closePath();
         ctx.fill();
 
-        ctx.fillStyle = '#dfe7f6';
+        ctx.fillStyle = '#dfe7f2';
         ctx.beginPath();
-        ctx.arc(r * 0.12, -r * 0.08, r * 0.17, 0, Math.PI * 2);
+        ctx.arc(r * 0.12, -r * 0.07, r * 0.17, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#101821';
+        ctx.fillStyle = '#101722';
         ctx.beginPath();
-        ctx.arc(r * 0.18, -r * 0.08, r * 0.06, 0, Math.PI * 2);
+        ctx.arc(r * 0.18, -r * 0.07, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
@@ -998,62 +915,57 @@
       function drawAnimal(entity) {
         if (!entity || !entity.alive) return;
 
-        const alpha = entity.tier === 3 && Math.hypot(entity.vx, entity.vy) < 18 ? 0.46 : 1;
+        const alpha = entity.tier === 3 && Math.hypot(entity.vx, entity.vy) < 18 ? 0.48 : 1;
         ctx.save();
         ctx.globalAlpha = alpha;
 
-        if (entity.skin === 'fish') drawFishBody(entity);
-        if (entity.skin === 'crab') drawCrab(entity);
-        if (entity.skin === 'squid') drawSquid(entity);
-        if (entity.skin === 'shark') drawShark(entity);
+        if (entity.skin === 'fish') drawFish(entity);
+        else if (entity.skin === 'crab') drawCrab(entity);
+        else if (entity.skin === 'squid') drawSquid(entity);
+        else if (entity.skin === 'shark') drawShark(entity);
 
         ctx.restore();
 
-        const x = worldToScreenX(entity.x);
-        const y = worldToScreenY(entity.y);
-        const barY = y + entity.radius + 18;
+        const sx = worldToScreenX(entity.x);
+        const sy = worldToScreenY(entity.y);
+        const barY = sy + entity.radius + 18;
 
-        drawBar(x, barY, 78, 7, clamp(entity.health / entity.maxHealth, 0, 1), '#51df87');
-        drawBar(x, barY + 10, 78, 5, clamp(entity.xp / (EVOLUTION_THRESHOLDS[entity.tier] || 1), 0, 1), '#6fc7ff');
-        drawBar(x, barY + 20, 78, 5, clamp(entity.boost / 100, 0, 1), '#ffd76c');
+        drawBar(sx, barY, 78, 7, clamp(entity.health / entity.maxHealth, 0, 1), '#4ae282');
+        drawBar(sx, barY + 10, 78, 5, clamp(entity.xp / (EVOLUTION_THRESHOLDS[entity.tier] || 1), 0, 1), '#68c8ff');
+        drawBar(sx, barY + 20, 78, 5, clamp(entity.boost / 100, 0, 1), '#ffd76c');
       }
 
       function renderPressureWarning() {
-        if (state.pressureWarning <= 0.02) return;
+        if (world.pressureWarning <= 0.02) return;
 
-        const flash = 0.12 + state.pressureWarning * 0.42 + Math.sin(performance.now() * 0.06) * 0.08;
-        ctx.fillStyle = `rgba(255, 82, 82, ${clamp(flash, 0, 0.7)})`;
+        const flash = 0.1 + world.pressureWarning * 0.45 + Math.sin(performance.now() * 0.05) * 0.08;
+        const alpha = clamp(flash, 0, 0.7);
+        ctx.fillStyle = `rgba(255, 84, 84, ${alpha})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 22px Segoe UI';
         ctx.textAlign = 'center';
+        ctx.font = 'bold 22px Segoe UI';
         ctx.fillText('DEEP SEA PRESSURE', canvas.width / 2, 60);
       }
 
       function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#061a2d';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         drawBackground();
         drawFood();
         drawParticles();
 
-        for (const bot of state.bots) {
-          drawAnimal(bot);
-        }
-
-        if (state.player) {
-          drawAnimal(state.player);
-        }
+        for (const bot of world.bots) drawAnimal(bot);
+        if (world.player) drawAnimal(world.player);
 
         renderPressureWarning();
       }
 
       function update(dt) {
-        state.mouse.worldX = state.mouse.x + state.camera.x - window.innerWidth / 2;
-        state.mouse.worldY = state.mouse.y + state.camera.y - window.innerHeight / 2;
+        if (world.player) {
+          world.mouse.worldX = world.mouse.x + world.camera.x - window.innerWidth / 2;
+          world.mouse.worldY = world.mouse.y + world.camera.y - window.innerHeight / 2;
+        }
 
         updatePlayer(dt);
         updateBots(dt);
@@ -1073,24 +985,23 @@
         });
 
         window.addEventListener('pointermove', (event) => {
-          state.mouse.x = event.clientX;
-          state.mouse.y = event.clientY;
+          world.mouse.x = event.clientX;
+          world.mouse.y = event.clientY;
         });
 
         window.addEventListener('pointerdown', (event) => {
-          state.mouse.x = event.clientX;
-          state.mouse.y = event.clientY;
-          if (state.player && state.player.alive && !state.gameOver && event.button === 0) {
-            triggerDash(state.player);
+          world.mouse.x = event.clientX;
+          world.mouse.y = event.clientY;
+
+          if (world.player && world.player.alive && !world.gameOver && event.button === 0) {
+            triggerDash(world.player);
           }
         });
 
         window.addEventListener('keydown', (event) => {
           if (event.code === 'Space') {
             event.preventDefault();
-            if (state.player && state.player.alive && !state.gameOver) {
-              triggerDash(state.player);
-            }
+            if (world.player && world.player.alive && !world.gameOver) triggerDash(world.player);
           }
         });
       }
@@ -1099,19 +1010,19 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        state.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
-        state.player.angle = -Math.PI / 2;
+        world.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
+        world.player.angle = -Math.PI / 2;
 
-        state.foods = [];
+        world.foods = [];
         for (let i = 0; i < FOOD_TARGET; i += 1) {
           spawnFood(rand(25, WORLD_WIDTH - 25), rand(25, WORLD_HEIGHT - 25));
         }
 
-        state.bots = [];
+        world.bots = [];
         for (let i = 0; i < BOT_TARGET; i += 1) {
-          const botTier = 1 + Math.floor(Math.random() * 3);
-          const bot = createEntity('bot', botTier, rand(180, WORLD_WIDTH - 180), rand(180, WORLD_HEIGHT - 180), `Bot ${i + 1}`);
-          state.bots.push(bot);
+          const tier = 1 + Math.floor(Math.random() * 3);
+          const bot = createEntity('bot', tier, rand(180, WORLD_WIDTH - 180), rand(180, WORLD_HEIGHT - 180), `Bot ${i + 1}`);
+          world.bots.push(bot);
         }
 
         setupInput();
@@ -1119,8 +1030,8 @@
         updateCamera();
 
         function loop(ts) {
-          const dt = Math.min((ts - state.lastTime) / 1000, 0.033);
-          state.lastTime = ts;
+          const dt = Math.min((ts - world.lastTime) / 1000, 0.033);
+          world.lastTime = ts;
 
           update(dt);
           render();
