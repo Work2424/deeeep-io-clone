@@ -6,18 +6,17 @@
   <title>Deeeep.io Clone</title>
   <style>
     :root {
-      --bg-1: #071b29;
-      --bg-2: #0b2334;
-      --panel: rgba(11, 19, 28, 0.64);
+      --bg0: #061a2a;
+      --bg1: #0b2336;
+      --panel: rgba(10, 18, 27, 0.7);
       --panel-border: rgba(255,255,255,0.12);
-      --text: #edf7ff;
-      --muted: #cfe0ef;
-      --green: #5fe3a3;
-      --blue: #73c9ff;
-      --gold: #ffd87a;
-      --danger: #ff5d5d;
-      --danger-soft: rgba(255, 93, 93, 0.24);
-      --shadow: rgba(0,0,0,0.35);
+      --text: #edf8ff;
+      --muted: #d3e7f9;
+      --health: #55e18a;
+      --xp: #6cc7ff;
+      --boost: #ffd56f;
+      --danger: #ff6a6a;
+      --shadow: rgba(0,0,0,0.32);
     }
 
     * { box-sizing: border-box; }
@@ -27,16 +26,16 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--bg-1);
+      background: var(--bg0);
       color: var(--text);
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-family: "Segoe UI", Tahoma, sans-serif;
     }
 
     canvas {
       display: block;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(180deg, #8bd0ff 0%, #74c1ff 30%, #5db0dc 45%, #3c6d87 48%, #1e3c4e 100%);
+      background: linear-gradient(180deg, #77bbff 0%, #61b1eb 28%, #3f7aa0 46%, #294a69 52%, #0d2236 100%);
       cursor: crosshair;
     }
 
@@ -46,10 +45,10 @@
       right: 16px;
       width: 210px;
       padding: 10px 12px 8px;
-      background: rgba(18, 25, 36, 0.78);
+      background: rgba(15, 22, 31, 0.78);
       border: 1px solid var(--panel-border);
       border-radius: 14px;
-      box-shadow: 0 14px 24px rgba(0,0,0,0.25);
+      box-shadow: 0 14px 25px rgba(0,0,0,0.28);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 20;
@@ -61,7 +60,7 @@
       align-items: center;
       color: var(--muted);
       font-size: 11px;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       margin-bottom: 6px;
       padding: 0 2px;
@@ -77,13 +76,13 @@
       font-size: 13px;
     }
 
-    .leaderboard-rank { opacity: 0.77; }
+    .leaderboard-rank { opacity: 0.75; }
     .leaderboard-name {
       overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
+      text-overflow: ellipsis;
     }
-    .leaderboard-xp { color: var(--blue); font-weight: 700; }
+    .leaderboard-xp { color: var(--xp); font-weight: 700; }
 
     #gameOverOverlay {
       position: fixed;
@@ -100,16 +99,16 @@
       min-width: 290px;
       padding: 24px 28px;
       border-radius: 18px;
-      background: rgba(10, 18, 28, 0.82);
+      background: rgba(9, 18, 27, 0.82);
       border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 18px 32px rgba(0,0,0,0.38);
+      box-shadow: 0 18px 32px rgba(0,0,0,0.4);
       text-align: center;
     }
 
     .game-over-card h2 {
       margin: 0 0 8px;
       font-size: 32px;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
 
     .game-over-card p {
@@ -125,10 +124,10 @@
       padding: 11px 20px;
       font: inherit;
       font-weight: 700;
-      color: #081b2a;
-      background: linear-gradient(135deg, #a5e5ff, #66dfad);
+      color: #091a2d;
+      background: linear-gradient(135deg, #aee8ff, #66e0a7);
       cursor: pointer;
-      box-shadow: 0 12px 22px rgba(71, 204, 135, 0.26);
+      box-shadow: 0 12px 22px rgba(71, 206, 136, 0.25);
       transition: transform 0.15s ease;
     }
 
@@ -137,7 +136,6 @@
 </head>
 <body>
   <canvas id="game"></canvas>
-
   <div id="leaderboard"></div>
 
   <div id="gameOverOverlay" class="hidden">
@@ -164,22 +162,23 @@
       const EVOLUTION_THRESHOLDS = { 1: 100, 2: 300, 3: 600 };
 
       const TIER_CONFIG = {
-        1: { name: 'Fish', label: 'Red Fish', color: '#e95c4d', skin: 'fish', radius: 18, speed: 170, maxHealth: 100, damage: 14 },
-        2: { name: 'Crab', label: 'Brown Crab', color: '#9d683d', skin: 'crab', radius: 24, speed: 182, maxHealth: 136, damage: 18 },
-        3: { name: 'Squid', label: 'Purple Squid', color: '#8a63ec', skin: 'squid', radius: 30, speed: 192, maxHealth: 172, damage: 22 },
-        4: { name: 'Shark', label: 'Apex Shark', color: '#a9b6c1', skin: 'shark', radius: 38, speed: 220, maxHealth: 248, damage: 32 }
+        1: { name: 'Fish', label: 'Red Fish', color: '#e95d52', skin: 'fish', radius: 18, speed: 170, maxHealth: 100, damage: 14 },
+        2: { name: 'Crab', label: 'Brown Crab', color: '#9b633e', skin: 'crab', radius: 24, speed: 182, maxHealth: 136, damage: 18 },
+        3: { name: 'Squid', label: 'Purple Squid', color: '#8a63ee', skin: 'squid', radius: 30, speed: 192, maxHealth: 172, damage: 22 },
+        4: { name: 'Shark', label: 'Apex Shark', color: '#afb9c6', skin: 'shark', radius: 38, speed: 220, maxHealth: 248, damage: 32 }
       };
 
-      const world = {
+      const state = {
         foods: [],
         particles: [],
         bots: [],
         player: null,
-        mouse: { x: 0, y: 0, worldX: WORLD_WIDTH / 2, worldY: WORLD_HEIGHT / 2 },
+        mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2, worldX: WORLD_WIDTH / 2, worldY: WORLD_HEIGHT / 2 },
         camera: { x: WORLD_WIDTH / 2, y: WORLD_HEIGHT / 2 },
         pressureWarning: 0,
+        gameOver: false,
         lastTime: performance.now(),
-        gameOver: false
+        bubbleSeed: []
       };
 
       function clamp(value, min, max) {
@@ -188,14 +187,6 @@
 
       function rand(min, max) {
         return min + Math.random() * (max - min);
-      }
-
-      function worldToScreenX(worldX) {
-        return worldX - world.camera.x + window.innerWidth / 2;
-      }
-
-      function worldToScreenY(worldY) {
-        return worldY - world.camera.y + window.innerHeight / 2;
       }
 
       function normalizeAngle(angle) {
@@ -209,23 +200,31 @@
         return current + clamp(diff, -amount, amount);
       }
 
+      function worldToScreenX(worldX) {
+        return worldX - state.camera.x + window.innerWidth / 2;
+      }
+
+      function worldToScreenY(worldY) {
+        return worldY - state.camera.y + window.innerHeight / 2;
+      }
+
       function spawnFood(x, y) {
-        world.foods.push({
+        state.foods.push({
           x,
           y,
           radius: rand(3.2, 6.4),
-          color: `hsl(${Math.random() * 360}, 75%, 64%)`,
+          color: `hsl(${Math.random() * 360}, 78%, 65%)`,
           active: true
         });
       }
 
       function replenishFood() {
-        while (world.foods.length < FOOD_TARGET) {
+        while (state.foods.length < FOOD_TARGET) {
           spawnFood(rand(25, WORLD_WIDTH - 25), rand(25, WORLD_HEIGHT - 25));
         }
 
-        world.foods = world.foods.filter((food) => food && food.active);
-        while (world.foods.length < FOOD_TARGET) {
+        state.foods = state.foods.filter((food) => food && food.active);
+        while (state.foods.length < FOOD_TARGET) {
           spawnFood(rand(25, WORLD_WIDTH - 25), rand(25, WORLD_HEIGHT - 25));
         }
       }
@@ -240,6 +239,7 @@
         entity.radius = cfg.radius;
         entity.speed = cfg.speed;
         entity.maxHealth = cfg.maxHealth;
+        entity.boostMax = 100;
 
         if (fullReset) {
           entity.health = cfg.maxHealth;
@@ -281,7 +281,15 @@
           wanderTarget: { x: rand(80, WORLD_WIDTH - 80), y: rand(80, WORLD_HEIGHT - 80) }
         };
 
+        const variants = {
+          fish: ['classic', 'stripe', 'sunburst', 'camo'],
+          crab: ['reef', 'stone', 'amber', 'dusk'],
+          squid: ['violet', 'ink', 'glow', 'neon'],
+          shark: ['steel', 'shadow', 'ice', 'storm']
+        };
+
         applyTierStats(entity, true);
+        entity.variant = (variants[entity.skin] || ['classic'])[Math.floor(Math.random() * (variants[entity.skin] || ['classic']).length)];
         return entity;
       }
 
@@ -313,14 +321,14 @@
       function spawnXPParticles(x, y, totalXP) {
         const count = clamp(Math.round(totalXP / 10), 10, 30);
         for (let i = 0; i < count; i += 1) {
-          world.particles.push({
+          state.particles.push({
             x,
             y,
             vx: rand(-120, 120),
             vy: rand(-120, 120),
-            radius: rand(2.8, 5.2),
+            radius: rand(2.6, 5.2),
             life: rand(0.7, 1.3),
-            color: i % 2 === 0 ? '#f5db70' : '#9fe4ff',
+            color: i % 2 === 0 ? '#f5da6d' : '#9fe8ff',
             active: true
           });
         }
@@ -333,7 +341,7 @@
 
         if (entity.type === 'player') {
           overlayEl.classList.remove('hidden');
-          world.gameOver = true;
+          state.gameOver = true;
           return;
         }
 
@@ -344,9 +352,9 @@
       }
 
       function respawnPlayer() {
-        world.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
-        world.player.angle = -Math.PI / 2;
-        world.gameOver = false;
+        state.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
+        state.player.angle = -Math.PI / 2;
+        state.gameOver = false;
         overlayEl.classList.add('hidden');
       }
 
@@ -371,7 +379,7 @@
         let best = null;
         let bestDistSq = Infinity;
 
-        for (const food of world.foods) {
+        for (const food of state.foods) {
           if (!food || !food.active) continue;
           const dx = food.x - entity.x;
           const dy = food.y - entity.y;
@@ -386,15 +394,15 @@
       }
 
       function updatePlayer(dt) {
-        const player = world.player;
-        if (!player || !player.alive || world.gameOver) return;
+        const player = state.player;
+        if (!player || !player.alive || state.gameOver) return;
 
         player.hitCooldown = Math.max(0, player.hitCooldown - dt);
         player.dashCooldown = Math.max(0, player.dashCooldown - dt);
         player.dashTimer = Math.max(0, player.dashTimer - dt);
         player.boost = clamp(player.boost + dt * 12, 0, 100);
 
-        const desiredAngle = Math.atan2(world.mouse.worldY - player.y, world.mouse.worldX - player.x);
+        const desiredAngle = Math.atan2(state.mouse.worldY - player.y, state.mouse.worldX - player.x);
         const turnSpeed = player.tier === 4 ? 3.1 : 2.5;
         player.angle = lerpAngle(player.angle, desiredAngle, turnSpeed * dt);
 
@@ -435,8 +443,8 @@
       }
 
       function updateBots(dt) {
-        for (let i = 0; i < world.bots.length; i += 1) {
-          const bot = world.bots[i];
+        for (let i = 0; i < state.bots.length; i += 1) {
+          const bot = state.bots[i];
           if (!bot) continue;
 
           bot.hitCooldown = Math.max(0, bot.hitCooldown - dt);
@@ -501,29 +509,29 @@
       }
 
       function handleFoodCollisions() {
-        const player = world.player;
+        const player = state.player;
 
         if (player && player.alive) {
-          for (let i = world.foods.length - 1; i >= 0; i -= 1) {
-            const food = world.foods[i];
+          for (let i = state.foods.length - 1; i >= 0; i -= 1) {
+            const food = state.foods[i];
             if (!food || !food.active) continue;
             if (Math.hypot(food.x - player.x, food.y - player.y) < food.radius + player.radius + 2) {
               gainXP(player, 10);
               food.active = false;
-              world.foods.splice(i, 1);
+              state.foods.splice(i, 1);
             }
           }
         }
 
-        for (const bot of world.bots) {
+        for (const bot of state.bots) {
           if (!bot || !bot.alive) continue;
-          for (let i = world.foods.length - 1; i >= 0; i -= 1) {
-            const food = world.foods[i];
+          for (let i = state.foods.length - 1; i >= 0; i -= 1) {
+            const food = state.foods[i];
             if (!food || !food.active) continue;
             if (Math.hypot(food.x - bot.x, food.y - bot.y) < food.radius + bot.radius + 2) {
               gainXP(bot, 10);
               food.active = false;
-              world.foods.splice(i, 1);
+              state.foods.splice(i, 1);
               break;
             }
           }
@@ -534,8 +542,8 @@
 
       function resolveCombat(a, b) {
         if (!a || !b || !a.alive || !b.alive) return;
-        const sameTier = a.tier === b.tier;
 
+        const sameTier = a.tier === b.tier;
         if (sameTier && a.tier !== 4) return;
 
         if (sameTier && a.tier === 4) {
@@ -558,20 +566,20 @@
       }
 
       function handleCombat() {
-        const player = world.player;
+        const player = state.player;
         if (player && player.alive) {
-          for (const bot of world.bots) {
+          for (const bot of state.bots) {
             if (!bot || !bot.alive) continue;
             const dist = Math.hypot(bot.x - player.x, bot.y - player.y);
             if (dist < player.radius + bot.radius + 5) resolveCombat(player, bot);
           }
         }
 
-        for (let i = 0; i < world.bots.length; i += 1) {
-          const a = world.bots[i];
+        for (let i = 0; i < state.bots.length; i += 1) {
+          const a = state.bots[i];
           if (!a || !a.alive) continue;
-          for (let j = i + 1; j < world.bots.length; j += 1) {
-            const b = world.bots[j];
+          for (let j = i + 1; j < state.bots.length; j += 1) {
+            const b = state.bots[j];
             if (!b || !b.alive) continue;
             const dist = Math.hypot(b.x - a.x, b.y - a.y);
             if (dist < a.radius + b.radius + 5) resolveCombat(a, b);
@@ -580,30 +588,30 @@
       }
 
       function updateParticles(dt) {
-        for (let i = world.particles.length - 1; i >= 0; i -= 1) {
-          const particle = world.particles[i];
-          if (!particle || !particle.active) {
-            world.particles.splice(i, 1);
+        for (let i = state.particles.length - 1; i >= 0; i -= 1) {
+          const p = state.particles[i];
+          if (!p || !p.active) {
+            state.particles.splice(i, 1);
             continue;
           }
 
-          particle.x += particle.vx * dt;
-          particle.y += particle.vy * dt;
-          particle.vy += 18 * dt;
-          particle.life -= dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.vy += 18 * dt;
+          p.life -= dt;
 
-          if (particle.life <= 0) world.particles.splice(i, 1);
+          if (p.life <= 0) state.particles.splice(i, 1);
         }
       }
 
       function updatePressureWarning(dt) {
         let active = false;
 
-        if (world.player && world.player.alive && world.player.tier !== 4 && world.player.y >= BIOME_SPLIT && world.player.pressureTimer > 5) {
+        if (state.player && state.player.alive && state.player.tier !== 4 && state.player.y >= BIOME_SPLIT && state.player.pressureTimer > 5) {
           active = true;
         }
 
-        for (const bot of world.bots) {
+        for (const bot of state.bots) {
           if (!bot || !bot.alive) continue;
           if (bot.tier !== 4 && bot.y >= BIOME_SPLIT && bot.pressureTimer > 5) {
             active = true;
@@ -612,24 +620,23 @@
         }
 
         if (active) {
-          world.pressureWarning = clamp(world.pressureWarning + dt * 3.3, 0, 1);
+          state.pressureWarning = clamp(state.pressureWarning + dt * 3.5, 0, 1);
         } else {
-          world.pressureWarning = clamp(world.pressureWarning - dt * 4.2, 0, 1);
+          state.pressureWarning = clamp(state.pressureWarning - dt * 4.2, 0, 1);
         }
       }
 
       function updateCamera() {
-        if (!world.player || !world.player.alive) return;
+        if (!state.player || !state.player.alive) return;
 
         const halfW = window.innerWidth / 2;
         const halfH = window.innerHeight / 2;
-
-        world.camera.x = clamp(world.player.x, halfW, WORLD_WIDTH - halfW);
-        world.camera.y = clamp(world.player.y, halfH, WORLD_HEIGHT - halfH);
+        state.camera.x = clamp(state.player.x, halfW, WORLD_WIDTH - halfW);
+        state.camera.y = clamp(state.player.y, halfH, WORLD_HEIGHT - halfH);
       }
 
       function updateLeaderboard() {
-        const entries = [world.player, ...world.bots]
+        const entries = [state.player, ...state.bots]
           .filter((entity) => entity && entity.alive)
           .sort((a, b) => (b.xp || 0) - (a.xp || 0))
           .slice(0, 5);
@@ -656,23 +663,23 @@
       }
 
       function drawBackground() {
-        const oceanTop = worldToScreenY(0);
+        const topY = worldToScreenY(0);
         const splitY = worldToScreenY(BIOME_SPLIT);
-        const oceanHeight = splitY - oceanTop;
+        const oceanHeight = splitY - topY;
         const deepHeight = worldToScreenY(WORLD_HEIGHT) - splitY;
 
-        const topGrad = ctx.createLinearGradient(0, oceanTop, 0, splitY);
-        topGrad.addColorStop(0, '#8ad7ff');
-        topGrad.addColorStop(0.24, '#75c6f1');
-        topGrad.addColorStop(0.6, '#5aa7d8');
-        topGrad.addColorStop(1, '#4a7ca5');
-        ctx.fillStyle = topGrad;
-        ctx.fillRect(worldToScreenX(0), oceanTop, WORLD_WIDTH, oceanHeight);
+        const oceanGrad = ctx.createLinearGradient(0, topY, 0, splitY);
+        oceanGrad.addColorStop(0, '#90d4ff');
+        oceanGrad.addColorStop(0.24, '#7bc5f7');
+        oceanGrad.addColorStop(0.66, '#62a7d5');
+        oceanGrad.addColorStop(1, '#4a7fa4');
+        ctx.fillStyle = oceanGrad;
+        ctx.fillRect(worldToScreenX(0), topY, WORLD_WIDTH, oceanHeight);
 
         const deepGrad = ctx.createLinearGradient(0, splitY, 0, splitY + deepHeight);
-        deepGrad.addColorStop(0, '#712c76');
-        deepGrad.addColorStop(0.45, '#1f3d6f');
-        deepGrad.addColorStop(1, '#071a29');
+        deepGrad.addColorStop(0, '#7a3e75');
+        deepGrad.addColorStop(0.45, '#203d6f');
+        deepGrad.addColorStop(1, '#081d2c');
         ctx.fillStyle = deepGrad;
         ctx.fillRect(worldToScreenX(0), splitY, WORLD_WIDTH, deepHeight);
 
@@ -683,17 +690,20 @@
         ctx.lineTo(worldToScreenX(WORLD_WIDTH), splitY);
         ctx.stroke();
 
-        ctx.fillStyle = 'rgba(255,255,255,0.08)';
-        for (let i = 0; i < 30; i += 1) {
-          const x = rand(0, canvas.width);
-          const y = rand(0, splitY);
-          const s = rand(1, 3);
-          ctx.fillRect(x, y, s, s);
+        const bubbleCount = 36;
+        for (let i = 0; i < bubbleCount; i += 1) {
+          const x = ((i * 149 + 61) % canvas.width);
+          const y = ((i * 83 + 59) % Math.max(1, splitY - 20));
+          const r = 2 + ((i * 7) % 4);
+          ctx.fillStyle = 'rgba(255,255,255,0.12)';
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
 
       function drawFood() {
-        for (const food of world.foods) {
+        for (const food of state.foods) {
           if (!food || !food.active) continue;
           const x = worldToScreenX(food.x);
           const y = worldToScreenY(food.y);
@@ -706,16 +716,16 @@
       }
 
       function drawParticles() {
-        for (const particle of world.particles) {
-          if (!particle || !particle.active) continue;
-          const x = worldToScreenX(particle.x);
-          const y = worldToScreenY(particle.y);
+        for (const p of state.particles) {
+          if (!p || !p.active) continue;
+          const x = worldToScreenX(p.x);
+          const y = worldToScreenY(p.y);
 
           ctx.save();
-          ctx.globalAlpha = clamp(particle.life, 0, 1);
-          ctx.fillStyle = particle.color;
+          ctx.globalAlpha = clamp(p.life, 0, 1);
+          ctx.fillStyle = p.color;
           ctx.beginPath();
-          ctx.arc(x, y, particle.radius, 0, Math.PI * 2);
+          ctx.arc(x, y, p.radius, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }
@@ -726,28 +736,25 @@
         ctx.fillRect(x - w / 2, y - h / 2, w, h);
 
         ctx.fillStyle = color;
-        const fillW = w * clamp(ratio, 0, 1);
-        ctx.fillRect(x - w / 2, y - h / 2, fillW, h);
+        ctx.fillRect(x - w / 2, y - h / 2, w * clamp(ratio, 0, 1), h);
       }
 
       function drawFish(entity) {
         const sx = worldToScreenX(entity.x);
         const sy = worldToScreenY(entity.y);
+        const r = entity.radius;
 
         ctx.save();
         ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
 
-        const r = entity.radius;
-        const variant = entity.variant || 'classic';
-
         ctx.fillStyle = entity.color;
         ctx.beginPath();
-        ctx.ellipse(0, 0, r * 1.22, r * 0.8, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, r * 1.2, r * 0.8, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        if (variant === 'stripe') {
-          ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        if (entity.variant === 'stripe') {
+          ctx.strokeStyle = 'rgba(255,255,255,0.38)';
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.moveTo(-r * 0.8, 0);
@@ -755,7 +762,7 @@
           ctx.stroke();
         }
 
-        if (variant === 'sunburst') {
+        if (entity.variant === 'sunburst') {
           ctx.fillStyle = '#ffe2a9';
           ctx.beginPath();
           ctx.moveTo(-r * 0.25, 0);
@@ -766,21 +773,21 @@
           ctx.fill();
         }
 
-        ctx.fillStyle = '#f7dfd7';
+        ctx.fillStyle = '#f3ddd6';
         ctx.beginPath();
         ctx.arc(r * 0.18, -r * 0.08, r * 0.18, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#101827';
+        ctx.fillStyle = '#171918';
         ctx.beginPath();
         ctx.arc(r * 0.22, -r * 0.08, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#e7f2ff';
+        ctx.fillStyle = '#eaf7ff';
         ctx.beginPath();
-        ctx.moveTo(r * 1.15, 0);
-        ctx.lineTo(r * 1.85, -r * 0.45);
-        ctx.lineTo(r * 1.85, r * 0.45);
+        ctx.moveTo(r * 1.18, 0);
+        ctx.lineTo(r * 1.82, -r * 0.45);
+        ctx.lineTo(r * 1.82, r * 0.45);
         ctx.closePath();
         ctx.fill();
 
@@ -790,11 +797,11 @@
       function drawCrab(entity) {
         const sx = worldToScreenX(entity.x);
         const sy = worldToScreenY(entity.y);
+        const r = entity.radius;
 
         ctx.save();
         ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
-        const r = entity.radius;
 
         ctx.fillStyle = entity.color;
         ctx.beginPath();
@@ -802,64 +809,65 @@
         ctx.fill();
 
         ctx.fillStyle = 'rgba(255,255,255,0.16)';
-        ctx.fillRect(-r * 0.5, -r * 0.2, r * 1.05, r * 0.4);
+        ctx.fillRect(-r * 0.5, -r * 0.18, r * 1.0, r * 0.36);
 
         ctx.fillStyle = '#5d392b';
         for (let i = -1; i <= 1; i += 1) {
           ctx.beginPath();
-          ctx.moveTo(-r * 0.8, i * 10);
-          ctx.lineTo(-r * 1.35, i * 14 + 8);
-          ctx.lineTo(-r * 1.35, i * 14 - 8);
+          ctx.moveTo(-r * 0.78, i * 10);
+          ctx.lineTo(-r * 1.32, i * 14 + 8);
+          ctx.lineTo(-r * 1.32, i * 14 - 8);
           ctx.closePath();
           ctx.fill();
         }
 
-        ctx.strokeStyle = '#5b2f21';
+        ctx.strokeStyle = '#5a2d22';
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(-r * 0.05, -r * 0.9);
-        ctx.lineTo(r * 0.7, -r * 1.25);
+        ctx.lineTo(r * 0.72, -r * 1.25);
         ctx.moveTo(-r * 0.05, r * 0.9);
-        ctx.lineTo(r * 0.7, r * 1.25);
+        ctx.lineTo(r * 0.72, r * 1.25);
         ctx.stroke();
 
-        ctx.fillStyle = '#f0d8b8';
+        ctx.fillStyle = '#f0d8b3';
         ctx.beginPath();
         ctx.arc(r * 0.25, -r * 0.08, r * 0.16, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#17181d';
+        ctx.fillStyle = '#14181d';
         ctx.beginPath();
         ctx.arc(r * 0.3, -r * 0.08, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
+
         ctx.restore();
       }
 
       function drawSquid(entity) {
         const sx = worldToScreenX(entity.x);
         const sy = worldToScreenY(entity.y);
+        const r = entity.radius;
 
         ctx.save();
         ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
 
-        const r = entity.radius;
         ctx.fillStyle = entity.color;
         ctx.beginPath();
         ctx.ellipse(0, 0, r * 1.1, r * 0.8, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#dfe2ff';
+        ctx.fillStyle = '#dfe0ff';
         ctx.beginPath();
         ctx.arc(r * 0.18, -r * 0.06, r * 0.17, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#161b2a';
+        ctx.fillStyle = '#111827';
         ctx.beginPath();
         ctx.arc(r * 0.23, -r * 0.06, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.strokeStyle = '#5c43d8';
+        ctx.strokeStyle = '#5e44d8';
         ctx.lineWidth = 2;
         for (let i = -2; i <= 2; i += 1) {
           ctx.beginPath();
@@ -874,39 +882,39 @@
       function drawShark(entity) {
         const sx = worldToScreenX(entity.x);
         const sy = worldToScreenY(entity.y);
+        const r = entity.radius;
 
         ctx.save();
         ctx.translate(sx, sy);
         ctx.rotate(entity.angle);
 
-        const r = entity.radius;
         ctx.fillStyle = entity.color;
         ctx.beginPath();
-        ctx.moveTo(-r * 1.3, 0);
+        ctx.moveTo(-r * 1.28, 0);
         ctx.lineTo(-r * 0.35, -r * 0.8);
-        ctx.lineTo(r * 0.82, -r * 0.46);
+        ctx.lineTo(r * 0.8, -r * 0.46);
         ctx.lineTo(r * 1.18, 0);
-        ctx.lineTo(r * 0.82, r * 0.46);
+        ctx.lineTo(r * 0.8, r * 0.46);
         ctx.lineTo(-r * 0.35, r * 0.8);
         ctx.closePath();
         ctx.fill();
 
-        ctx.fillStyle = '#7d8ea0';
+        ctx.fillStyle = '#7a8ea1';
         ctx.beginPath();
-        ctx.moveTo(r * 0.85, 0);
-        ctx.lineTo(r * 1.8, -r * 0.33);
-        ctx.lineTo(r * 1.8, r * 0.33);
+        ctx.moveTo(r * 0.82, 0);
+        ctx.lineTo(r * 1.8, -r * 0.35);
+        ctx.lineTo(r * 1.8, r * 0.35);
         ctx.closePath();
         ctx.fill();
 
-        ctx.fillStyle = '#dfe7f2';
+        ctx.fillStyle = '#dfeaf7';
         ctx.beginPath();
-        ctx.arc(r * 0.12, -r * 0.07, r * 0.17, 0, Math.PI * 2);
+        ctx.arc(r * 0.12, -r * 0.08, r * 0.17, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#101722';
+        ctx.fillStyle = '#101823';
         ctx.beginPath();
-        ctx.arc(r * 0.18, -r * 0.07, r * 0.06, 0, Math.PI * 2);
+        ctx.arc(r * 0.18, -r * 0.08, r * 0.06, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
@@ -930,20 +938,19 @@
         const sy = worldToScreenY(entity.y);
         const barY = sy + entity.radius + 18;
 
-        drawBar(sx, barY, 78, 7, clamp(entity.health / entity.maxHealth, 0, 1), '#4ae282');
-        drawBar(sx, barY + 10, 78, 5, clamp(entity.xp / (EVOLUTION_THRESHOLDS[entity.tier] || 1), 0, 1), '#68c8ff');
-        drawBar(sx, barY + 20, 78, 5, clamp(entity.boost / 100, 0, 1), '#ffd76c');
+        drawBar(sx, barY, 78, 7, clamp(entity.health / entity.maxHealth, 0, 1), '#4fe38a');
+        drawBar(sx, barY + 10, 78, 5, clamp(entity.xp / (EVOLUTION_THRESHOLDS[entity.tier] || 1), 0, 1), '#68c7ff');
+        drawBar(sx, barY + 20, 78, 5, clamp(entity.boost / 100, 0, 1), '#ffd770');
       }
 
       function renderPressureWarning() {
-        if (world.pressureWarning <= 0.02) return;
+        if (state.pressureWarning <= 0.02) return;
 
-        const flash = 0.1 + world.pressureWarning * 0.45 + Math.sin(performance.now() * 0.05) * 0.08;
-        const alpha = clamp(flash, 0, 0.7);
-        ctx.fillStyle = `rgba(255, 84, 84, ${alpha})`;
+        const flash = 0.08 + state.pressureWarning * 0.42 + Math.sin(performance.now() * 0.05) * 0.08;
+        ctx.fillStyle = `rgba(255, 84, 84, ${clamp(flash, 0, 0.7)})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#fff';
         ctx.textAlign = 'center';
         ctx.font = 'bold 22px Segoe UI';
         ctx.fillText('DEEP SEA PRESSURE', canvas.width / 2, 60);
@@ -955,16 +962,16 @@
         drawFood();
         drawParticles();
 
-        for (const bot of world.bots) drawAnimal(bot);
-        if (world.player) drawAnimal(world.player);
+        for (const bot of state.bots) drawAnimal(bot);
+        if (state.player) drawAnimal(state.player);
 
         renderPressureWarning();
       }
 
       function update(dt) {
-        if (world.player) {
-          world.mouse.worldX = world.mouse.x + world.camera.x - window.innerWidth / 2;
-          world.mouse.worldY = world.mouse.y + world.camera.y - window.innerHeight / 2;
+        if (state.player) {
+          state.mouse.worldX = state.mouse.x + state.camera.x - window.innerWidth / 2;
+          state.mouse.worldY = state.mouse.y + state.camera.y - window.innerHeight / 2;
         }
 
         updatePlayer(dt);
@@ -985,23 +992,22 @@
         });
 
         window.addEventListener('pointermove', (event) => {
-          world.mouse.x = event.clientX;
-          world.mouse.y = event.clientY;
+          state.mouse.x = event.clientX;
+          state.mouse.y = event.clientY;
         });
 
         window.addEventListener('pointerdown', (event) => {
-          world.mouse.x = event.clientX;
-          world.mouse.y = event.clientY;
-
-          if (world.player && world.player.alive && !world.gameOver && event.button === 0) {
-            triggerDash(world.player);
+          state.mouse.x = event.clientX;
+          state.mouse.y = event.clientY;
+          if (state.player && state.player.alive && !state.gameOver && event.button === 0) {
+            triggerDash(state.player);
           }
         });
 
         window.addEventListener('keydown', (event) => {
           if (event.code === 'Space') {
             event.preventDefault();
-            if (world.player && world.player.alive && !world.gameOver) triggerDash(world.player);
+            if (state.player && state.player.alive && !state.gameOver) triggerDash(state.player);
           }
         });
       }
@@ -1010,19 +1016,19 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        world.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
-        world.player.angle = -Math.PI / 2;
+        state.player = createEntity('player', 1, WORLD_WIDTH / 2, 260, 'You');
+        state.player.angle = -Math.PI / 2;
 
-        world.foods = [];
+        state.foods = [];
         for (let i = 0; i < FOOD_TARGET; i += 1) {
           spawnFood(rand(25, WORLD_WIDTH - 25), rand(25, WORLD_HEIGHT - 25));
         }
 
-        world.bots = [];
+        state.bots = [];
         for (let i = 0; i < BOT_TARGET; i += 1) {
           const tier = 1 + Math.floor(Math.random() * 3);
           const bot = createEntity('bot', tier, rand(180, WORLD_WIDTH - 180), rand(180, WORLD_HEIGHT - 180), `Bot ${i + 1}`);
-          world.bots.push(bot);
+          state.bots.push(bot);
         }
 
         setupInput();
@@ -1030,9 +1036,8 @@
         updateCamera();
 
         function loop(ts) {
-          const dt = Math.min((ts - world.lastTime) / 1000, 0.033);
-          world.lastTime = ts;
-
+          const dt = Math.min((ts - state.lastTime) / 1000, 0.033);
+          state.lastTime = ts;
           update(dt);
           render();
           requestAnimationFrame(loop);
